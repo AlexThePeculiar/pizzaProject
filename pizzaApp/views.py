@@ -1,5 +1,5 @@
 from django.shortcuts import render
 # Create your views here.
 def fun(request):
-	return render(request,"page1.html",{})
+	return render(request, "pizzaApp/page1.html", {})
 	
