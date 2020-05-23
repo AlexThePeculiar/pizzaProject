@@ -3,5 +3,5 @@ from pizzaApp import views
 
 
 urlpatterns = [
-    path('', views.fun, name = 'pizzaApp')
+    path('', views.index, name = 'pizzaApp')
 ]
