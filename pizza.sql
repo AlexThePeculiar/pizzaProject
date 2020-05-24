@@ -61,7 +61,6 @@ PRIMARY KEY(id),
 item VARCHAR(20), 
 price FLOAT 
 );
-DROP TABLE diametr;
 DELETE FROM fruits WHERE id='TFI2';
 ALTER TABLE diameter CHANGE item item INT;
 ALTER TABLE crust CHANGE name item VARCHAR(20);
@@ -103,19 +102,33 @@ INSERT INTO cheese(id,item,price) VALUES('TC1','parmesian', 2.00);
 INSERT INTO cheese(id,item,price) VALUES('TC2','cheddar', 2.00);
 INSERT INTO cheese(id,item,price) VALUES('TC3','feta', 2.20);
 
+CREATE TABLE pizzas(
+id VARCHAR(6),
+PRIMARY KEY(id),
+item VARCHAR(40),
+ingredients TEXT
+);
+
 CREATE TABLE orders(
 id INT AUTO_INCREMENT PRIMARY KEY,
 firstName VARCHAR(30), 
 phone VARCHAR(13),
 email VARCHAR(40),
 address VARCHAR(100),
-comments VARCHAR(400),
+comments VARCHAR(1000),
 clock DATETIME,
 clockFinish DATETIME,
 payment VARCHAR(4),
 price FLOAT, 
-orderItems VARCHAR(2000)
+orderItems TEXT
 );
+
+INSERT INTO pizzas(id,item,ingredients) VALUES('P1','Хрущевская', '{"crust":"C2", 
+							"toppings":["TME2", "TMU1", "TV2", "TC1"],"sauceBase":"S1","diameter":"D2"}');
+INSERT INTO pizzas(id,item,ingredients) VALUES('P2','Кравчукская', '{"crust":"C3", 
+							"toppings":["TME3", "TMU3", "TV1", "TC2"],"sauceBase":"S3","diameter":"D3"}');
+INSERT INTO pizzas(id,item,ingredients) VALUES('P3','Фиделич', '{"crust":"C1", 
+							"toppings":["TME1", "TME2","TFR1", "TC1"],"sauceBase":"S1","diameter":"D1"}');
 
 SELECT* FROM orders;
 SHOW TABLES;

@@ -193,16 +193,26 @@ class Orders(models.Model):
     phone = models.CharField(max_length=13, blank=True, null=True)
     email = models.CharField(max_length=40, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
-    comments = models.CharField(max_length=400, blank=True, null=True)
+    comments = models.CharField(max_length=1000, blank=True, null=True)
     clock = models.DateTimeField(blank=True, null=True)
     clockfinish = models.DateTimeField(db_column='clockFinish', blank=True, null=True)  # Field name made lowercase.
     payment = models.CharField(max_length=4, blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
-    orderitems = models.CharField(db_column='orderItems', max_length=2000, blank=True, null=True)  # Field name made lowercase.
+    orderitems = models.TextField(db_column='orderItems', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'orders'
+
+
+class Pizzas(models.Model):
+    id = models.CharField(primary_key=True, max_length=6)
+    item = models.CharField(max_length=40, blank=True, null=True)
+    ingredients = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'pizzas'
 
 
 class Sauce(models.Model):
