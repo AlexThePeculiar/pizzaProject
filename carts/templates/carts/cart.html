@@ -19,18 +19,27 @@
 
     <table class="table">
     <thead>
-        <th>Pizza</th>
-        <th>Price</th>
-    <th></th>
+        <th>Пицца</th>
+        <th>Цена</th>
+        <th>Количество</th>
+        <th></th>
     </thead>
-    <tfoot>
-    <td></td>
-    <td>Total: {{ cart.total }}</td>
-    <td></td>
-    </tfoot>
-    {% for pizza in cart.pizzas.all %}
-    <tr><td>{{ pizza.item }}</td><td>{{ pizza.price }}</td><td><a href="{% url "update_cart" pizza.id %}">Remove</a></td></tr>
+
+    {% for pizza in cart.items.all %}
+    <tr>
+        <td>{{ pizza.pizzas.item }}</td>
+        <td>{{ pizza.pizzas.price|floatformat:2  }}</td>
+        <td>{{ pizza.quantity }}</td>
+        <td><a href="{% url "update_cart" pizza.pizzas.id %}">Выгнать из партии</a></td>
+    </tr>
     {% endfor %}
+
+    <tfoot>
+        <td></td>
+        <td>Итого: {{ cart.total|floatformat:2  }}</td>
+        <td></td>
+        <td></td>
+    </tfoot>
     </table>
   </div>
   {% endif %}

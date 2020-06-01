@@ -3,7 +3,7 @@ from django.urls import reverse
 # Create your views here.
 
 
-from .models import Cart
+from .models import Cart, CartItem
 from pizzaApp.models import Pizzas
 
 
@@ -42,15 +42,21 @@ def update_cart(request, pizza_id):
         pizza = Pizzas.objects.get(id=pizza_id)
     except Pizzas.DoesNotExist:
         pass
-    if not pizza in cart.pizzas.all():
-        cart.pizzas.add(pizza)
+
+    cart_item, created = CartItem.objects.get_or_create(pizzas=pizza)
+    if created:
+        print("cart item created")
+
+    if not cart_item in cart.items.all():
+        cart.items.add(cart_item)
     else:
-        cart.pizzas.remove(pizza)
+        cart.items.remove(cart_item)
 
     # count total price
     new_total = 0.00
-    for element in cart.pizzas.all():
-        new_total += element.price
+    for element in cart.items.all():
+        line_total = element.pizzas.price * element.quantity
+        new_total += line_total
 
     request.session['totalprice'] = new_total
     # print(cart.pizzas.count())
