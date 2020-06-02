@@ -2,9 +2,9 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 # Create your views here.
 
-
+import time
 from .models import Cart, CartItem
-from pizzaApp.models import Pizzas
+from pizzaApp.models import Pizzas, Orders
 
 
 def view(request):
@@ -69,7 +69,7 @@ def add_to_cart(request, pizza_id):
     except Pizzas.DoesNotExist:
         pass
 
-    cart_item = CartItem.objects.create(cart=cart, pizzas=pizza)
+    cart_item, succ = CartItem.objects.get_or_create(cart=cart, pizzas=pizza)
 
     if cart_item.quantity == 0 and int(qty) == -1:
         cart_item.delete()
@@ -94,3 +94,17 @@ def add_to_cart(request, pizza_id):
         return HttpResponseRedirect(reverse('cart'))
     else:
         return HttpResponseRedirect(reverse('home'))
+
+
+def checkout(request):
+    try:
+        the_id = request.session['cart_id']
+        cart = Cart.objects.get(id=the_id)
+        print(cart)
+    except:
+        the_id = None
+
+    new_order = Orders.objects.create()
+    context = {'id': the_id}
+    template = 'carts/checkout.html'
+    return render(request, template, context)
