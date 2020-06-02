@@ -22,7 +22,8 @@
         <td>{{ pizza.pizzas.price|floatformat:2  }}</td>
         <td>{{ pizza.quantity }}</td>
         <td>
-             <form method="GET" action="{% url "update_cart" pizza.pizzas.id %}">
+             <form method="POST" action="{% url 'remove_from_cart' pizza.id %}">
+                 {% csrf_token %}
                  <input name="qty" type="number" value="0" style="display:none">
                  <input type="submit" value="Выгнать из партии" class="btn btn-sm btn-outline-secondary">
              </form>

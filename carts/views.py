@@ -18,6 +18,16 @@ def view(request):
     if the_id:
         cart = Cart.objects.get(id=the_id)
         context = {'cart': cart}
+
+        new_total = 0.00
+        for element in cart.cartitem_set.all():
+            line_total = element.pizzas.price * element.quantity
+            new_total += line_total
+
+        request.session['totalprice'] = new_total
+        # print(cart.pizzas.count())
+        cart.total = new_total
+        cart.save()
     else:
         context = {'empty': True}
 
@@ -25,10 +35,24 @@ def view(request):
     return render(request, template, context)
 
 
-def update_cart(request, pizza_id):
+def remove_from_cart(request, id):
+    try:
+        the_id = request.session['cart_id']
+        cart = Cart.objects.get(id=the_id)
+    except:
+        return HttpResponseRedirect(reverse("cart"))
+
+    cartitem = CartItem.objects.get(id=id)
+    cartitem.delete()
+    return HttpResponseRedirect(reverse("cart"))
+
+
+def add_to_cart(request, pizza_id):
     # make a new cart or get a cart if it exists in session
     # request.session.set_expiry(86400)
-    qty = request.GET.get('qty')
+    if request.method == 'POST':
+        qty = int(request.POST['qty'])
+        print(request.POST)
 
     try:
         the_id = request.session['cart_id']
@@ -45,9 +69,7 @@ def update_cart(request, pizza_id):
     except Pizzas.DoesNotExist:
         pass
 
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, pizzas=pizza)
-    if created:
-        print("cart item created")
+    cart_item, succ = CartItem.objects.get_or_create(cart=cart, pizzas=pizza)
 
     if cart_item.quantity == 0 and int(qty) == -1:
         cart_item.delete()
@@ -56,12 +78,6 @@ def update_cart(request, pizza_id):
     else:
         cart_item.quantity += int(qty)
         cart_item.save()
-
-
-    # if not cart_item in cart.items.all():
-    #     cart.items.add(cart_item)
-    # else:
-    #     cart.items.remove(cart_item)
 
     # count total price
     new_total = 0.00

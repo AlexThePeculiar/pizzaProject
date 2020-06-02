@@ -1,0 +1,44 @@
+*{
+	font-family: Impact, "sans serif";
+}
+
+/*#menu{
+	position:relative;
+	overflow:hidden;
+}
+*/
+#menu nav {
+	background-color: #8b0000;
+	/*height: 63px;*/
+}
+/*
+#menu #img-container{
+	height:55px;
+}
+
+#menu #menu-double-flat{
+	position: absolute;
+    z-index: 1;
+    margin-top: -62px;
+    transform: scale(-1.1);
+    width: 1920px;
+}
+
+#menu #menu-point-down{
+	position: absolute;
+	left:50%;
+	width: 144px;
+	margin-left: -72px;
+	top: 63px;
+	z-index:1;
+}
+
+#menu #menu-double-point{
+	position: absolute;
+    z-index: 1;
+    transform: scale(-1.1);
+    width: 1920px;
+    margin-top: -8px;
+    right: calc( -960px + 0.5*(100%) );
+}
+/*

@@ -1,30 +1,40 @@
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+{% load static %}
+<div id="header">
+    <div id="menu">
+        <nav class="navbar navbar-expand-md navbar-dark">
 
-      <!-- Brand name -->
-      <a class="navbar-brand" href="{% url 'home' %}">KikaPizza</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+          <!-- Brand name -->
+          <a class="navbar-brand" href="{% url 'home' %}">KikaPizza</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+          </button>
 
-      <!-- Buttons -->
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'cart' %}" tabindex="-1" aria-disabled="true">
-                Cart: {% if not request.session.totalprice %} 0.00
-                {% else %} {{ request.session.totalprice|floatformat:2 }}
-                {% endif %}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+          <!-- Buttons -->
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'cart' %}" tabindex="-1" aria-disabled="true">
+                    Cart: {% if not request.session.totalprice %} 0.00
+                    {% else %} {{ request.session.totalprice|floatformat:2 }}
+                    {% endif %}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+{#        <div id="img-container">#}
+{#            <img src="{% static 'img/double-flat.svg' %}" id="menu-double-flat"/>#}
+{#            <img src="{% static 'img/menu/pointy-down.svg' %}" id="menu-point-down"/>#}
+{#            <img src="{% static 'img/double-point.svg' %}" id="menu-double-point"/>#}
+{#        </div>#}
+    </div>
+</div>
