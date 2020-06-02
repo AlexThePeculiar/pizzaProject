@@ -5,7 +5,7 @@ from carts import views
 
 urlpatterns = [
     path('', views.view, name='cart'),
-    re_path(r'^(?P<pizza_id>[\w-]+)/$', views.update_cart, name='update_cart')
+    re_path(r'^(?P<pizza_id>[\w-]+)/$', views.update_cart, name='update_cart'),
     # path('test', views.home, name='home')
 ]
 

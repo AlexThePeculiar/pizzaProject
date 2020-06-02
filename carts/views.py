@@ -28,6 +28,8 @@ def view(request):
 def update_cart(request, pizza_id):
     # make a new cart or get a cart if it exists in session
     # request.session.set_expiry(86400)
+    qty = request.GET.get('qty')
+
     try:
         the_id = request.session['cart_id']
     except:
@@ -43,18 +45,27 @@ def update_cart(request, pizza_id):
     except Pizzas.DoesNotExist:
         pass
 
-    cart_item, created = CartItem.objects.get_or_create(pizzas=pizza)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, pizzas=pizza)
     if created:
         print("cart item created")
 
-    if not cart_item in cart.items.all():
-        cart.items.add(cart_item)
+    if cart_item.quantity == 0 and int(qty) == -1:
+        cart_item.delete()
+    elif int(qty) == 0:
+        cart_item.delete()
     else:
-        cart.items.remove(cart_item)
+        cart_item.quantity += int(qty)
+        cart_item.save()
+
+
+    # if not cart_item in cart.items.all():
+    #     cart.items.add(cart_item)
+    # else:
+    #     cart.items.remove(cart_item)
 
     # count total price
     new_total = 0.00
-    for element in cart.items.all():
+    for element in cart.cartitem_set.all():
         line_total = element.pizzas.price * element.quantity
         new_total += line_total
 
@@ -62,4 +73,8 @@ def update_cart(request, pizza_id):
     # print(cart.pizzas.count())
     cart.total = new_total
     cart.save()
-    return HttpResponseRedirect(reverse('cart'))
+
+    if not abs(int(qty)):
+        return HttpResponseRedirect(reverse('cart'))
+    else:
+        return HttpResponseRedirect(reverse('home'))

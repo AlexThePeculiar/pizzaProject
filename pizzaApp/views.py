@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Pizzas
+from carts.models import Cart
 
 
 # Create your views here.
