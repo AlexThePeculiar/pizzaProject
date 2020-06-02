@@ -69,7 +69,7 @@ def add_to_cart(request, pizza_id):
     except Pizzas.DoesNotExist:
         pass
 
-    cart_item, succ = CartItem.objects.get_or_create(cart=cart, pizzas=pizza)
+    cart_item = CartItem.objects.create(cart=cart, pizzas=pizza)
 
     if cart_item.quantity == 0 and int(qty) == -1:
         cart_item.delete()
