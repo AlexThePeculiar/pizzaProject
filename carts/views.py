@@ -52,7 +52,6 @@ def add_to_cart(request, pizza_id):
     # request.session.set_expiry(86400)
     if request.method == 'POST':
         qty = int(request.POST['qty'])
-        print(request.POST)
 
     try:
         the_id = request.session['cart_id']
@@ -97,6 +96,14 @@ def add_to_cart(request, pizza_id):
 
 
 def checkout(request):
+    if request.method == 'POST':
+        name = request.POST['firstName']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        address = request.POST['address']
+        comments = request.POST['comments']
+        payment
+
     try:
         the_id = request.session['cart_id']
         cart = Cart.objects.get(id=the_id)
@@ -105,6 +112,7 @@ def checkout(request):
         the_id = None
 
     new_order = Orders.objects.create()
+
     context = {'id': the_id}
     template = 'carts/checkout.html'
     return render(request, template, context)

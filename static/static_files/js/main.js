@@ -9,4 +9,5 @@ $(document).ready(function(){
             $('#content').removeClass('fix-body-onscroll');
         }
     });
+
 });

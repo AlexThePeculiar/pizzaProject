@@ -7,6 +7,7 @@
   {% if empty or not request.session.totalprice %}
     <h2>Your cart is empty, N-word</h2>
 
+
   {% else %}
     <table class="table">
     <thead>
@@ -38,7 +39,101 @@
         <td></td>
     </tfoot>
     </table>
-      <a href="{% url "checkout" %}"><button>Вступить в комсомол</button></a>
-  {% endif %}
   </div>
+
+    <div class="billing container">
+      <div class="row">
+        <div class="col-md-8 order-md-1">
+          <h4 class="mb-3">Данные о доставке</h4>
+
+          <form class="needs-validation" novalidate method="POST" action="{% url "checkout" %}">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="firstName">Имя</label>
+                <input type="text" class="form-control" name="firstName" id="firstName"  placeholder="" required="">
+                <div class="invalid-feedback">
+                  Введите Ваше имя
+                </div>
+              </div>
+
+            <div class="mb-3">
+              <label for="email">Адрес электронной почты <span class="text-muted">(Необязательно)</span></label>
+              <input type="email" class="form-control" name="email" id="email" placeholder="lenin@ussr.com">
+              <div class="invalid-feedback">
+                Введите правильно адрес электронной почты
+              </div>
+            </div>
+
+              <div class="mb-3">
+                <label for="phone">Телефон</label>
+                <input type="tel" class="form-control" name="phone" id="phone" placeholder="" required="">
+                <div class="invalid-feedback">
+                  Введите правильный номер телефона
+                </div>
+              </div>
+
+            <div class="mb-3">
+              <label for="address">Адрес</label>
+              <input type="text" class="form-control" name="address" id="address" placeholder="ул. Советская 9, кв. 145" required="">
+              <div class="invalid-feedback">
+                Введите Ваш адрес
+              </div>
+            </div>
+
+              <div class="mb-3">
+                <label for="comments">Комментарии к заказу</label>
+                <textarea class="form-control" name="comments" id="comments" rows="3"></textarea>
+              </div>
+
+            <hr class="mb-4">
+
+            <h4 class="mb-3">Оплата</h4>
+
+            <div class="d-block my-3">
+              <div class="custom-control custom-radio">
+                <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked="" required="" value="наличные">
+                <label class="custom-control-label" for="credit">Наличными</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input id="card-onspot" name="paymentMethod" type="radio" class="custom-control-input" required="" value="карта на месте">
+                <label class="custom-control-label" for="card-onspot">Кредитная карта (на месте)</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input id="card-online" name="paymentMethod" type="radio" class="custom-control-input" required="" value="карта онлайн">
+                <label class="custom-control-label" for="card-online">Кредитная карта (онлайн)</label>
+              </div>
+            </div>
+
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Вступить в комсомол!</button>
+
+
+              <script>
+                // Example starter JavaScript for disabling form submissions if there are invalid fields
+                (function() {
+                  'use strict';
+                  window.addEventListener('load', function() {
+                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                    var forms = document.getElementsByClassName('needs-validation');
+                    // Loop over them and prevent submission
+                    var validation = Array.prototype.filter.call(forms, function(form) {
+                      form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                          event.preventDefault();
+                          event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                      }, false);
+                    });
+                  }, false);
+                })();
+                </script>
+
+          </form>
+        </div>
+      </div>
+
+  {% endif %}
+    </div>
+
 {% endblock %}
