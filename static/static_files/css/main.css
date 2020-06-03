@@ -1,36 +1,72 @@
 *{
 	font-family: Impact, "sans serif";
 }
+/* HEADER */
+#header{
+    height:100px;
+    background-color: #8b0000;
+}
 
-/*#menu{
+/* MENU ON SCROLL */
+.fixed-menu {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.fix-body-onscroll{
+	padding-top: 120px;
+}
+
+/* MENU */
+#menu-container img{
+	pointer-events: none;
+}
+
+#menu-light{
+	position:absolute;
+	z-index:1;
+	width: 1020px;
+	right: calc( -510px + 0.5*(100%) );
+	mix-blend-mode: overlay;
+}
+
+#menu{
 	position:relative;
 	overflow:hidden;
 }
-*/
+
 #menu nav {
 	background-color: #8b0000;
-	/*height: 63px;*/
 }
-/*
+
+.navbar-brand,
+.navbar-nav li a {
+    line-height: 51px;
+    height: 51px;
+    padding-top: 0;
+}
+
 #menu #img-container{
 	height:55px;
 }
 
+
 #menu #menu-double-flat{
 	position: absolute;
     z-index: 1;
-    margin-top: -62px;
     transform: scale(-1.1);
     width: 1920px;
 }
 
 #menu #menu-point-down{
-	position: absolute;
-	left:50%;
 	width: 144px;
-	margin-left: -72px;
-	top: 63px;
-	z-index:1;
+    position: absolute;
+    margin:0 auto;
+    left:0;
+    right:0;
 }
 
 #menu #menu-double-point{
@@ -41,4 +77,14 @@
     margin-top: -8px;
     right: calc( -960px + 0.5*(100%) );
 }
-/*
+
+#menu #menu-emblem{
+	width: 83px;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -48px;
+    left:0;
+    right:0;
+    z-index:2;
+}

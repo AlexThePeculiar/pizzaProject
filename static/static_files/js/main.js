@@ -1,6 +1,12 @@
 $(document).ready(function(){
-	// $( "#menu #menu-double-point" ).css('right', -960 + 0.5*($(window).width()));
-	// $( window ).resize(function() {
-	// 	$( "#menu #menu-double-point" ).css('right', -960 + 0.5*($(window).width()));
-	// });
+	$(window).scroll(function(){
+        if ($(window).scrollTop() >= $('#header').height()) {
+            $('#menu-container').addClass('fixed-menu');
+            $('#content').addClass('fix-body-onscroll');
+        }
+        else {
+            $('#menu-container').removeClass('fixed-menu');
+            $('#content').removeClass('fix-body-onscroll');
+        }
+    });
 });
