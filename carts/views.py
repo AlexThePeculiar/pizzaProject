@@ -2,9 +2,11 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 # Create your views here.
 
-import time
+from datetime import datetime, timedelta
+import pytz
 from .models import Cart, CartItem
-from pizzaApp.models import Pizzas, Orders
+from pizzaApp.models import Pizzas, Orders, Cheese, Crust, Diameter, Fish, Fruits, Meat, Mushrooms, Sauce, Saucebase, Vegetables
+import json
 
 
 def view(request):
@@ -102,17 +104,79 @@ def checkout(request):
         phone = request.POST['phone']
         address = request.POST['address']
         comments = request.POST['comments']
-        payment
+        payment = request.POST['paymentMethod']
 
     try:
         the_id = request.session['cart_id']
         cart = Cart.objects.get(id=the_id)
-        print(cart)
     except:
         the_id = None
 
     new_order = Orders.objects.create()
+    new_order.firstname = name
+    new_order.phone = phone
+    new_order.email = email
+    new_order.address = address
+    new_order.comments = comments
+    new_order.payment = payment
+    new_order.price = cart.total
+
+    eu = pytz.timezone('Europe/Minsk')
+    now = datetime.now(eu)
+    done = now + timedelta(0, 2700)
+    now = now.strftime('%Y-%m-%d %H:%M')
+    done = done.strftime('%Y-%m-%d %H:%M')
+    new_order.clock = now
+    new_order.clockfinish = done
+
+    pizzas = ''
+    for item in cart.cartitem_set.all():
+        pizza_dict = json.loads(item.pizzas.ingredients)
+        pizza_dict = decipher(pizza_dict)
+        pizzas += str(item.quantity) + 'x - ' + str(pizza_dict) + ' \n'
+    print(pizzas)
+
+    new_order.orderitems = pizzas
+    new_order.save()
 
     context = {'id': the_id}
     template = 'carts/checkout.html'
+
+    del request.session['cart_id']
+    del request.session['totalprice']
+
+    for cartitem in cart.cartitem_set.all():
+        cartitem.delete()
+    cart.delete()
+
     return render(request, template, context)
+
+
+def decipher(dict):
+    for key, value in dict.items():
+        if key == 'crust':
+            changed = Crust.objects.get(id=value).item
+        elif key == 'toppings':
+            changed = []
+            for topping in dict['toppings']:
+                if topping[:3] == 'TME':
+                    elem = Meat.objects.get(id=topping).item
+                elif topping[:3] == 'TMU':
+                    elem = Mushrooms.objects.get(id=topping).item
+                elif topping[:3] == 'TFR':
+                    elem = Fruits.objects.get(id=topping).item
+                elif topping[:3] == 'TFI':
+                    elem = Fish.objects.get(id=topping).item
+                elif topping[:2] == 'TV':
+                    elem = Vegetables.objects.get(id=topping).item
+                elif topping[:2] == 'TS':
+                    elem = Sauce.objects.get(id=topping).item
+                else:
+                    elem = Cheese.objects.get(id=topping).item
+                changed.append(elem)
+        elif key == 'sauceBase':
+            changed = Saucebase.objects.get(id=value).item
+        else:
+            changed = Diameter.objects.get(id=value).item
+        dict[key] = changed
+    return dict

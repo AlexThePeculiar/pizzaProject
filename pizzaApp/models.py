@@ -209,6 +209,7 @@ class Pizzas(models.Model):
     id = models.CharField(primary_key=True, max_length=6)
     item = models.CharField(max_length=40, blank=True, null=True)
     ingredients = models.TextField(blank=True, null=True)
+    descript = models.TextField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
 
     class Meta:
