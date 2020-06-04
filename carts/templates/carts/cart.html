@@ -17,14 +17,22 @@
         <th></th>
     </thead>
 
-    {% for pizza in cart.cartitem_set.all %}
+    {% for pizza, info in items %}
     <tr>
         <td>
             {% if pizza.changes == None %}
-                {{ pizza.pizzas.item }}
+                <p class="item-name">{{ pizza.pizzas.item }}</p>
             {% else %}
-                {{ pizza.pizzas.item|add:' (изменённая)' }}
+                <p class="item-name">{{ pizza.pizzas.item|add:' (изменённая)' }}</p>
             {% endif %}
+
+        <p class="item-general-info">{{ info|first }}</p>
+        {% if info|last == '' %}
+            <p>Начинки нет</p>
+        {% else %}
+            <p class="item-toppings-info">{{ info|last|capfirst }}</p>
+        {% endif %}
+
         </td>
 
 

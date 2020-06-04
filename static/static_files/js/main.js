@@ -10,4 +10,7 @@ $(document).ready(function(){
         }
     });
 
+	// $("#form-edit-mode").submit(function(e){
+    //     e.preventDefault();
+    // });
 });

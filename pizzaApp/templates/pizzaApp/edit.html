@@ -1,0 +1,120 @@
+{% extends 'pizzaApp/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <form method="POST" action="{% url 'edit' pizza_id %}" id="form-edit-mode">
+        {% csrf_token %}
+         <table class="table">
+            <thead>
+                <th>Сыры</th>
+                <th>Рыба</th>
+                <th>Фрукты</th>
+                <th>Мясные изделия</th>
+                <th>Грибы</th>
+                <th>Соусы</th>
+                <th>Овощи</th>
+            </thead>
+
+             {% for element in toppings %}
+                 <tr>
+                {% for elem in element %}
+
+                    {% if elem == None %}
+                        <td></td>
+                    {% else %}
+                        <td>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="toppings" id="{{ elem.id }}" value="{{ elem.id }}"
+
+                                {% for inittop in initial_toppings %}
+                                    {% if elem.id == inittop %}
+                                        checked
+                                    {% endif %}
+                                {% endfor %}
+                                >
+                                <label class="form-check-label" for="{{ elem.id }}">{{ elem.item }}</label>
+                            </div>
+                        </td>
+                    {% endif %}
+
+                {% endfor %}
+                 </tr>
+             {% endfor %}
+
+            <tfoot>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tfoot>
+         </table>
+
+
+        <div class="row">
+            <div class="col-lg-2">
+                Тесто:
+            </div>
+            {% for crust in crusts %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="crust" id="{{ crust.id }}" value="{{ crust.id }}"
+
+                    {% if crust.id == initial_crust %}
+                            checked
+                    {% endif %}
+                    >
+                    <label class="form-check-label" for="{{ crust.id }}">{{ crust.item }}</label>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2">
+                Соус:
+            </div>
+            {% for sauce in sauceBases %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="sauceBase" id="{{ sauce.id }}" value="{{ sauce.id }}"
+
+                    {% if sauce.id == initial_sauceBase %}
+                            checked
+                    {% endif %}
+                    >
+                    <label class="form-check-label" for="{{ sauce.id }}">{{ sauce.item }}</label>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2">
+                Диаметр:
+            </div>
+            {% for diameter in diameters %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="diameter" id="{{ diameter.id }}" value="{{ diameter.id }}"
+
+                    {% if diameter.id == initial_diameter %}
+                            checked
+                    {% endif %}
+                    >
+                    <label class="form-check-label" for="{{ diameter.id }}">{{ diameter.item }}</label>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row justify-content-around">
+
+            <div class="col-lg-3">
+                <input type="button" name="cancel" value="Отменить перестройку" onClick="window.location.href='{% url 'home' %}#container-{{ pizza_id }}';" />
+            </div>
+            <div class="col-lg-3">
+                <input type="submit" value="Закончить перестройку" class="button">
+            </div>
+         </div>
+    </form>
+    </div>
+
+{% endblock %}
+

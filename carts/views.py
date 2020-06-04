@@ -19,7 +19,6 @@ def view(request):
     # get the cart by its id, otherwise print Empty message
     if the_id:
         cart = Cart.objects.get(id=the_id)
-        context = {'cart': cart}
 
         new_total = 0.00
         for element in cart.cartitem_set.all():
@@ -36,6 +35,17 @@ def view(request):
         # print(cart.pizzas.count())
         cart.total = new_total
         cart.save()
+
+
+        items = []
+        for item in cart.cartitem_set.all():
+            if item.changes is None:
+                items.append([item, output(literal_eval(item.pizzas.ingredients))])
+            else:
+                items.append([item, output(literal_eval(item.changes))])
+        print(items)
+        context = {'items': items}
+
     else:
         context = {'empty': True}
 
@@ -203,7 +213,34 @@ def decipher(dicty):
         dicty[key] = changed
     return dicty
 
-# def output(dicty):
-#     for key, value in dicty.items():
-#         if key == 'crust':
-#             changed = Crust.objects.get(id=value).item
+def output(dicty):
+    crust = Crust.objects.get(id=dicty['crust']).item
+    diameter = Diameter.objects.get(id=dicty['diameter']).item
+    sauceBase = Saucebase.objects.get(id=dicty['sauceBase']).item
+    general = str(diameter) + ' см, ' + crust + ' тесто, ' + sauceBase + ' соус'
+
+    toppings = ''
+    i = 1
+    for topping in dicty['toppings']:
+        if topping[:3] == 'TME':
+            elem = Meat.objects.get(id=topping).item
+        elif topping[:3] == 'TMU':
+            elem = Mushrooms.objects.get(id=topping).item
+        elif topping[:3] == 'TFR':
+            elem = Fruits.objects.get(id=topping).item
+        elif topping[:3] == 'TFI':
+            elem = Fish.objects.get(id=topping).item
+        elif topping[:2] == 'TV':
+            elem = Vegetables.objects.get(id=topping).item
+        elif topping[:2] == 'TS':
+            elem = Sauce.objects.get(id=topping).item
+        else:
+            elem = Cheese.objects.get(id=topping).item
+
+        if i < len(dicty['toppings']):
+            toppings += elem + ', '
+        else:
+            toppings += elem
+        i += 1
+
+    return [general, toppings]
