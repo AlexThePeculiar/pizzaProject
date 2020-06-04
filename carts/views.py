@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import pytz
 from .models import Cart, CartItem
 from pizzaApp.models import Pizzas, Orders, Cheese, Crust, Diameter, Fish, Fruits, Meat, Mushrooms, Sauce, Saucebase, Vegetables
-import json
+from ast import literal_eval
 
 
 def view(request):
@@ -26,6 +26,12 @@ def view(request):
             line_total = element.pizzas.price * element.quantity
             new_total += line_total
 
+        for element in cart.cartitem_set.all():
+            if element.changes is None:
+                print(element.pizzas.ingredients)
+            else:
+                print(element.changes)
+
         request.session['totalprice'] = new_total
         # print(cart.pizzas.count())
         cart.total = new_total
@@ -38,6 +44,8 @@ def view(request):
 
 
 def remove_from_cart(request, id):
+    if request.method == 'POST':
+        qty = int(request.POST['qty'])
     try:
         the_id = request.session['cart_id']
         cart = Cart.objects.get(id=the_id)
@@ -45,7 +53,13 @@ def remove_from_cart(request, id):
         return HttpResponseRedirect(reverse("cart"))
 
     cartitem = CartItem.objects.get(id=id)
-    cartitem.delete()
+    if qty == 0:
+        cartitem.delete()
+    elif qty == -1 and cartitem.quantity == 1:
+        cartitem.delete()
+    else:
+        cartitem.quantity += qty
+        cartitem.save()
     return HttpResponseRedirect(reverse("cart"))
 
 
@@ -70,15 +84,15 @@ def add_to_cart(request, pizza_id):
     except Pizzas.DoesNotExist:
         pass
 
-    cart_item, succ = CartItem.objects.get_or_create(cart=cart, pizzas=pizza)
+    # try:
+    #     cart_item = CartItem.objects.get(cart=cart, pizzas=pizza)
+    #     if cart_item.changes is
+    # except:
+    #     cart_item = CartItem.objects.create(cart=cart, pizzas=pizza)
+    cart_item, succ = CartItem.objects.get_or_create(cart=cart, pizzas=pizza, changes=None)
 
-    if cart_item.quantity == 0 and int(qty) == -1:
-        cart_item.delete()
-    elif int(qty) == 0:
-        cart_item.delete()
-    else:
-        cart_item.quantity += int(qty)
-        cart_item.save()
+    cart_item.quantity += int(qty)
+    cart_item.save()
 
     # count total price
     new_total = 0.00
@@ -86,15 +100,19 @@ def add_to_cart(request, pizza_id):
         line_total = element.pizzas.price * element.quantity
         new_total += line_total
 
+    cart_item.line_total = line_total
+    cart_item.save()
     request.session['totalprice'] = new_total
     # print(cart.pizzas.count())
+
     cart.total = new_total
     cart.save()
 
     if not abs(int(qty)):
         return HttpResponseRedirect(reverse('cart'))
     else:
-        return HttpResponseRedirect(reverse('home'))
+
+        return HttpResponseRedirect(reverse('home') + '#container-' + pizza_id)
 
 
 def checkout(request):
@@ -131,7 +149,11 @@ def checkout(request):
 
     pizzas = ''
     for item in cart.cartitem_set.all():
-        pizza_dict = json.loads(item.pizzas.ingredients)
+        if item.changes is None:
+            pizza_dict = literal_eval(item.pizzas.ingredients)
+        else:
+            pizza_dict = literal_eval(item.changes)
+
         pizza_dict = decipher(pizza_dict)
         pizzas += str(item.quantity) + 'x - ' + str(pizza_dict) + ' \n'
     print(pizzas)
@@ -139,7 +161,7 @@ def checkout(request):
     new_order.orderitems = pizzas
     new_order.save()
 
-    context = {'id': the_id}
+    context = {'id': the_id, 'name': name}
     template = 'carts/checkout.html'
 
     del request.session['cart_id']
@@ -152,13 +174,13 @@ def checkout(request):
     return render(request, template, context)
 
 
-def decipher(dict):
-    for key, value in dict.items():
+def decipher(dicty):
+    for key, value in dicty.items():
         if key == 'crust':
             changed = Crust.objects.get(id=value).item
         elif key == 'toppings':
             changed = []
-            for topping in dict['toppings']:
+            for topping in dicty['toppings']:
                 if topping[:3] == 'TME':
                     elem = Meat.objects.get(id=topping).item
                 elif topping[:3] == 'TMU':
@@ -178,5 +200,10 @@ def decipher(dict):
             changed = Saucebase.objects.get(id=value).item
         else:
             changed = Diameter.objects.get(id=value).item
-        dict[key] = changed
-    return dict
+        dicty[key] = changed
+    return dicty
+
+# def output(dicty):
+#     for key, value in dicty.items():
+#         if key == 'crust':
+#             changed = Crust.objects.get(id=value).item

@@ -9,7 +9,7 @@
 
 
   {% else %}
-    <table class="table">
+    <table class="table" id="cart-items">
     <thead>
         <th>Пицца</th>
         <th>Цена</th>
@@ -19,9 +19,33 @@
 
     {% for pizza in cart.cartitem_set.all %}
     <tr>
-        <td>{{ pizza.pizzas.item }}</td>
+        <td>
+            {% if pizza.changes == None %}
+                {{ pizza.pizzas.item }}
+            {% else %}
+                {{ pizza.pizzas.item|add:' (изменённая)' }}
+            {% endif %}
+        </td>
+
+
+
         <td>{{ pizza.pizzas.price|floatformat:2  }}</td>
-        <td>{{ pizza.quantity }}</td>
+
+        <td>
+            <div class="quantity-container">
+                <form method="POST" action="{% url "remove_from_cart" pizza.id %}">
+                    {% csrf_token %}
+                    <input name="qty" type="number" value="1" style="display:none">
+                    <input type="submit" value="+" class="btn btn-sm btn-outline-secondary">
+                </form>
+                {{ pizza.quantity }}
+                <form method="POST" action="{% url "remove_from_cart" pizza.id %}">
+                    {% csrf_token %}
+                    <input name="qty" type="number" value="-1" style="display:none">
+                    <input type="submit" value="-" class="btn btn-sm btn-outline-secondary">
+                </form>
+            </div>
+        </td>
         <td>
              <form method="POST" action="{% url 'remove_from_cart' pizza.id %}">
                  {% csrf_token %}
@@ -62,6 +86,7 @@
               <div class="invalid-feedback">
                 Введите правильно адрес электронной почты
               </div>
+            </div>
 
               <div class="mb-3">
                 <label for="phone">Телефон</label>

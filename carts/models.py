@@ -6,6 +6,7 @@ from pizzaApp.models import Pizzas
 class CartItem(models.Model):
     cart = models.ForeignKey('Cart', null=True, blank=True, on_delete=models.DO_NOTHING)
     pizzas = models.ForeignKey('pizzaApp.Pizzas', on_delete=models.DO_NOTHING)
+    changes = models.TextField(null=True, blank=True)
     quantity = models.IntegerField(default=0)
     line_total = models.FloatField(null=True, blank=True, default=0.00)
     def __str__(self):

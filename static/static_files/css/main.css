@@ -88,3 +88,19 @@
     right:0;
     z-index:2;
 }
+
+#cart-items .quantity-container{
+    display: flex;
+}
+
+
+#cart-items .quantity-container [type=submit]{
+	width: 25px;
+    height: 25px;
+    margin: 0 15px;
+    padding: 0;
+    display: inline-block;
+    line-height: 0px;
+    text-align: center;
+    font-size: 20px;
+}
