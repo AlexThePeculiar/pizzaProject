@@ -8,6 +8,8 @@
 from django.db import models
 
 
+from ast import literal_eval
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 
@@ -209,8 +211,31 @@ class Pizzas(models.Model):
     id = models.CharField(primary_key=True, max_length=6)
     item = models.CharField(max_length=40, blank=True, null=True)
     ingredients = models.TextField(blank=True, null=True)
-    descript = models.TextField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        price = 5
+        pizza = literal_eval(self.ingredients)
+        for topping in pizza['toppings']:
+            if topping[:3] == 'TME':
+                elem = Meat.objects.get(id=topping).price
+            elif topping[:3] == 'TMU':
+                elem = Mushrooms.objects.get(id=topping).price
+            elif topping[:3] == 'TFR':
+                elem = Fruits.objects.get(id=topping).price
+            elif topping[:3] == 'TFI':
+                elem = Fish.objects.get(id=topping).price
+            elif topping[:2] == 'TV':
+                elem = Vegetables.objects.get(id=topping).price
+            elif topping[:2] == 'TS':
+                elem = Sauce.objects.get(id=topping).price
+            else:
+                elem = Cheese.objects.get(id=topping).price
+            price += elem
+        price += Diameter.objects.get(id=pizza['diameter']).price
+        self.price = round(price, 2)
 
     class Meta:
         managed = False

@@ -11,6 +11,8 @@ from ast import literal_eval
 
 def home(request):
     pizzas = Pizzas.objects.all()
+    for pizza in pizzas:
+        print(pizza.ingredients, pizza.price)
     template = 'pizzaApp/home.html'
     context = {
         'pizzas': pizzas,
@@ -36,12 +38,32 @@ def edit(request, pizza_id):
         ingr['toppings'] = sorted(ingr['toppings'])
         if ingr == changed_pizza:
             cart_item, created = CartItem.objects.get_or_create(cart=cart, pizzas=pizza)
+
         else:
             cart_item, created = CartItem.objects.get_or_create(cart=cart, pizzas=pizza, changes=str(changed_pizza))
-        cart_item.quantity += 1
 
-        #Change
+            # price = 5
+            # for topping in changed_pizza['toppings']:
+            #     if topping[:3] == 'TME':
+            #         elem = Meat.objects.get(id=topping).price
+            #     elif topping[:3] == 'TMU':
+            #         elem = Mushrooms.objects.get(id=topping).price
+            #     elif topping[:3] == 'TFR':
+            #         elem = Fruits.objects.get(id=topping).price
+            #     elif topping[:3] == 'TFI':
+            #         elem = Fish.objects.get(id=topping).price
+            #     elif topping[:2] == 'TV':
+            #         elem = Vegetables.objects.get(id=topping).price
+            #     elif topping[:2] == 'TS':
+            #         elem = Sauce.objects.get(id=topping).price
+            #     else:
+            #         elem = Cheese.objects.get(id=topping).price
+            #     price += elem
+            # price += Diameter.objects.get(id=changed_pizza['diameter']).price
+            # cart_item.line_total = round(price, 2)
+
         cart_item.line_total = pizza.price
+        cart_item.quantity += 1
 
         request.session['totalprice'] += cart_item.line_total
 

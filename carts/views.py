@@ -249,15 +249,15 @@ def sendmail(name, email, comments, time, cart):
     items = []
     for item in cart.cartitem_set.all():
         if item.changes is None:
-            items.append([item.pizzas.item, output(literal_eval(item.pizzas.ingredients))])
+            items.append([item, output(literal_eval(item.pizzas.ingredients))])
         else:
-            items.append([item.pizzas.item + ' (изменённая)', output(literal_eval(item.changes))])
+            items.append([item + ' (изменённая)', output(literal_eval(item.changes))])
 
     text = 'Дорогой товарищ ' + name + '! Спасибо, что оформили заказ на нашем сайте. ' + 'Ваш заказ был оформлен ' \
            + time + ' под номером №' + str(cart.id) + '. Ваш заказ на сумму ' + str(cart.total) + '0' + ' рублей:\n'
 
     for item in items:
-        text += item[0] + ':\n        ' + item[1][0] + '\n        ' + item[1][1] + '\n'
+        text += item[0].pizzas.item + ' x' + str(item[0].quantity) + ':\n        ' + item[1][0] + '\n        ' + item[1][1] + '\n'
 
     if comments is not '':
         text += '\nВаши комментарий к заказу: ' + comments + '\n'
