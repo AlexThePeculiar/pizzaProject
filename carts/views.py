@@ -22,10 +22,12 @@ def view(request):
     # get the cart by its id, otherwise print Empty message
     if the_id:
         cart = Cart.objects.get(id=the_id)
-
         new_total = 0.00
         for element in cart.cartitem_set.all():
-            line_total = element.pizzas.price * element.quantity
+            if element.changes is None:
+                line_total = element.pizzas.price * element.quantity
+            else:
+                line_total = element.price_changed * element.quantity
             new_total += line_total
 
         request.session['totalprice'] = new_total
@@ -251,13 +253,17 @@ def sendmail(name, email, comments, time, cart):
         if item.changes is None:
             items.append([item, output(literal_eval(item.pizzas.ingredients))])
         else:
-            items.append([item + ' (изменённая)', output(literal_eval(item.changes))])
+            items.append([item, output(literal_eval(item.changes))])
 
     text = 'Дорогой товарищ ' + name + '! Спасибо, что оформили заказ на нашем сайте. ' + 'Ваш заказ был оформлен ' \
            + time + ' под номером №' + str(cart.id) + '. Ваш заказ на сумму ' + str(cart.total) + '0' + ' рублей:\n'
 
     for item in items:
-        text += item[0].pizzas.item + ' x' + str(item[0].quantity) + ':\n        ' + item[1][0] + '\n        ' + item[1][1] + '\n'
+        if item[0].changes is None:
+            name = item[0].pizzas.item
+        else:
+            name = item[0].pizzas.item + ' (изменённая)'
+        text += name + ' x' + str(item[0].quantity) + ':\n        ' + item[1][0] + '\n        ' + item[1][1] + '\n'
 
     if comments is not '':
         text += '\nВаши комментарий к заказу: ' + comments + '\n'

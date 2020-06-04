@@ -10,7 +10,10 @@ $(document).ready(function(){
         }
     });
 
-	// $("#form-edit-mode").submit(function(e){
-    //     e.preventDefault();
-    // });
+	$("#form-checkout").submit(function(e){
+        if(parseFloat($('#total').text()) < 12.00){
+                alert('Минимальная сумма заказа - 12.00 рублей')
+                e.preventDefault();
+        }
+    });
 });
