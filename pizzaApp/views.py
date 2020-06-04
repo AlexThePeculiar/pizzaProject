@@ -29,15 +29,20 @@ def edit(request, pizza_id):
         cart = Cart.objects.get(id=the_id)
         pizza = Pizzas.objects.get(id=pizza_id)
 
-        changed_pizza = {'crust': request.POST['crust'], 'toppings': request.POST.getlist('toppings'),
+        changed_pizza = {'crust': request.POST['crust'], 'toppings': sorted(request.POST.getlist('toppings')),
                          'sauceBase': request.POST['sauceBase'], 'diameter': request.POST['diameter']}
 
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, pizzas=pizza, changes=str(changed_pizza))
+        ingr = literal_eval(pizza.ingredients)
+        ingr['toppings'] = sorted(ingr['toppings'])
+        if ingr == changed_pizza:
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, pizzas=pizza)
+        else:
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, pizzas=pizza, changes=str(changed_pizza))
         cart_item.quantity += 1
 
         #Change
         cart_item.line_total = pizza.price
-        print(cart_item.line_total)
+
         request.session['totalprice'] += cart_item.line_total
 
         cart_item.save()

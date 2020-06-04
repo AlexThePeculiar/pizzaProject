@@ -1,11 +1,14 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
+from pizzaProject.settings import EMAIL_HOST_USER
+from django.core.mail import send_mail
 # Create your views here.
 
 from datetime import datetime, timedelta
 import pytz
 from .models import Cart, CartItem
-from pizzaApp.models import Pizzas, Orders, Cheese, Crust, Diameter, Fish, Fruits, Meat, Mushrooms, Sauce, Saucebase, Vegetables
+from pizzaApp.models import Pizzas, Orders, Cheese, Crust, Diameter, Fish, Fruits, Meat, Mushrooms, Sauce, Saucebase, \
+    Vegetables
 from ast import literal_eval
 
 
@@ -25,17 +28,10 @@ def view(request):
             line_total = element.pizzas.price * element.quantity
             new_total += line_total
 
-        for element in cart.cartitem_set.all():
-            if element.changes is None:
-                print(element.pizzas.ingredients)
-            else:
-                print(element.changes)
-
         request.session['totalprice'] = new_total
         # print(cart.pizzas.count())
         cart.total = new_total
         cart.save()
-
 
         items = []
         for item in cart.cartitem_set.all():
@@ -43,8 +39,7 @@ def view(request):
                 items.append([item, output(literal_eval(item.pizzas.ingredients))])
             else:
                 items.append([item, output(literal_eval(item.changes))])
-        print(items)
-        context = {'items': items}
+        context = {'items': items, 'cart': cart}
 
     else:
         context = {'empty': True}
@@ -166,12 +161,15 @@ def checkout(request):
 
         pizza_dict = decipher(pizza_dict)
         pizzas += str(item.quantity) + 'x - ' + str(pizza_dict) + ' \n'
-    print(pizzas)
 
     new_order.orderitems = pizzas
     new_order.save()
 
     context = {'id': the_id, 'name': name}
+
+    if email is not '':
+        sendmail(name, email, comments, now, cart)
+
     template = 'carts/checkout.html'
 
     del request.session['cart_id']
@@ -213,6 +211,7 @@ def decipher(dicty):
         dicty[key] = changed
     return dicty
 
+
 def output(dicty):
     crust = Crust.objects.get(id=dicty['crust']).item
     diameter = Diameter.objects.get(id=dicty['diameter']).item
@@ -244,3 +243,25 @@ def output(dicty):
         i += 1
 
     return [general, toppings]
+
+
+def sendmail(name, email, comments, time, cart):
+    items = []
+    for item in cart.cartitem_set.all():
+        if item.changes is None:
+            items.append([item.pizzas.item, output(literal_eval(item.pizzas.ingredients))])
+        else:
+            items.append([item.pizzas.item + ' (изменённая)', output(literal_eval(item.changes))])
+
+    text = 'Дорогой товарищ ' + name + '! Спасибо, что оформили заказ на нашем сайте. ' + 'Ваш заказ был оформлен ' \
+           + time + ' под номером №' + str(cart.id) + '. Ваш заказ на сумму ' + str(cart.total) + '0' + ' рублей:\n'
+
+    for item in items:
+        text += item[0] + ':\n        ' + item[1][0] + '\n        ' + item[1][1] + '\n'
+
+    if comments is not '':
+        text += '\nВаши комментарий к заказу: ' + comments + '\n'
+
+    text += '\nДа хранит вас Владимир Ильич Ленин!\nСлава КПСС и Советскому союзу!'
+    subject = 'Заказ №' + str(cart.id)
+    send_mail(subject, text, EMAIL_HOST_USER, [email], fail_silently=False)
