@@ -281,6 +281,25 @@
 	border: none;
 }
 
+.father{
+	margin-top: 70px;
+}
+.father .text-xlarge{
+	margin-left: -60px;
+	margin-right: -60px;
+}
+
+.father-image{
+	height: 250px;
+	margin-left: -20px;
+}
+
+.frame{
+	width: 240px;
+	margin-top: -280px;
+	margin-left: -50px;
+}
+
 #content .price-container .text-large{
    margin-bottom: 0;
 }

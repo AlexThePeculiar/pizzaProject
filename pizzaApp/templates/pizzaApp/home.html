@@ -80,7 +80,17 @@
                     </div>
                   </div>
                 </div>
+            {% if forloop.counter0|divisibleby:'2' %}
+                <div class="father col-lg-2 text-center">
+                    {% with y=forloop.counter|stringformat:"s" %}
 
+                        <img  src="{% static 'img/fathers/'|add:y|add:'.jpg' %}" class="father-image"/>
+                        <img src="{% static 'img/body/picture_frame.png' %}" class="frame"/>
+                    {% endwith %}
+                <p class="text-xlarge"> {% cycle 'Ленин В. И.' 'Сталин И. В.' 'Хрущёв Н. С.' 'Брежнев Л. И.' 'Андропов Ю. В.' 'Черненко К. У.' 'Горбачёв М. С.'%}</p>
+
+                </div>
+            {% endif %}
             {% cycle '' '</div>' %}
             {% if forloop.last %}
                 {% if forloop.counter0|divisibleby:'2' %}
