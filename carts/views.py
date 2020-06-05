@@ -144,7 +144,7 @@ def checkout(request):
     new_order.address = address
     new_order.comments = comments
     new_order.payment = payment
-    new_order.price = cart.total
+    new_order.price = round(cart.total, 2)
 
     eu = pytz.timezone('Europe/Minsk')
     now = datetime.now(eu)
@@ -256,7 +256,7 @@ def sendmail(name, email, comments, time, cart):
             items.append([item, output(literal_eval(item.changes))])
 
     text = 'Дорогой товарищ ' + name + '! Спасибо, что оформили заказ на нашем сайте. ' + 'Ваш заказ был оформлен ' \
-           + time + ' под номером №' + str(cart.id) + '. Ваш заказ на сумму ' + str(cart.total) + '0' + ' рублей:\n'
+           + time + ' под номером №' + str(cart.id) + '. Ваш заказ на сумму ' + str(round(cart.total, 2)) + '0' + ' рублей:\n'
 
     for item in items:
         if item[0].changes is None:

@@ -1,54 +1,91 @@
 {% load static %}
 <div id="header-container">
+
     <div id="header">
-        <div class="row " >
-            <div class="col-lg-3">
-                Left content here
-            </div>
-            <div class="col-lg-4">
-                Center here
-            </div>
-            <div class="col-lg-3">
-                Right content here
+        <img src="{% static 'img/background.jpg' %}" id="header-background"/>
+        <img src="{% static 'img/header/lenin.png' %}" id="header-lenin"/>
+        <img src="{% static 'img/header/light_header.png' %}" id="header-light"/>
+        <img src="{% static 'img/header/guy_right.png' %}" id="header-stalin"/>
+        <div class="container">
+            <div class="row justify-content-center align-items-center" >
+                <div class="col-lg-3 text-center">
+                    <p class="text-xlarge">45 МИНУТ</p>
+                    <p class="text-medium">или пицца от партии</p>
+                    <p class="text-large">В ПОДАРОК*</p>
+                </div>
+                <div class="col-lg-4 text-center" id="logo-container">
+                    <img src="{% static 'img/logo.png' %}" class="img-responsive" id="logo" />
+                    <p class="text-medium">Самые вкусные пиццы в союзе!</p>
+                </div>
+                <div class="col-lg-3 text-center">
+                    <p class="text-xlarge">753-23-25</p>
+                    <p class="text-medium">доставка пиццы</p>
+                    <p class="text-large">КРУГЛОСУТОЧНО</p>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="menu-container">
     <img src="{% static 'img/menu/light_menu.png' %}" id="menu-light"/>
+
         <div id="menu">
 
             <img src="{% static 'img/double-flat.svg' %}" id="menu-double-flat"/>
+
+
             <nav class="navbar navbar-expand-md navbar-dark" >
 
+            <div id="star-left-container">
+                <img src="{% static 'img/menu/star.png' %}"/>
+                <img src="{% static 'img/menu/star.png' %}"/>
+                <img src="{% static 'img/menu/star.png' %}"/>
+            </div>
+            <div class="container">
               <!-- Brand name -->
-              <a class="navbar-brand" href="{% url 'home' %}">КППицца</a>
+              <!--<a class="navbar-brand" href="{% url 'home' %}">КППицца</a>
               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-              </button>
+                <span class="navbar-toggler-icon"></span>
+              </button>-->
 
               <!-- Buttons -->
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                  <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+              <div class="collapse navbar-collapse navbar-center" id="navbarSupportedContent">
+
+                <ul class="navbar-nav col-lg-12 justify-content-round">
+
+                  <li class="nav-item col-lg-2 offset-lg-1 text-center">
+                    <a class="nav-link" href="{% url 'home' %}#content">Пиццы</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+
+                  <li class="nav-item col-lg-2 text-center">
+                    <a class="nav-link" href="#">Лимонады</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+
+                  <li class="nav-item col-lg-2 offset-lg-2 text-center">
+                    <a class="nav-link" href="#">Контакты</a>
                   </li>
-                  <li class="nav-item">
+
+                  <li class="nav-item col-lg-3">
                     <a class="nav-link" href="{% url 'cart' %}" tabindex="-1" aria-disabled="true">
-                        Cart: {% if not request.session.totalprice %} 0.00
+                        Корзина: {% if not request.session.totalprice %} 0.00
                         {% else %} {{ request.session.totalprice|floatformat:2 }}
                         {% endif %}
                     </a>
+                  <img src="{% static 'img/menu/cart.svg' %}" id="cart-icon"/>
                   </li>
+
                 </ul>
               </div>
+             </div>
+
+            <div id="star-right-container">
+                <img src="{% static 'img/menu/star.png' %}"/>
+                <img src="{% static 'img/menu/star.png' %}"/>
+                <img src="{% static 'img/menu/star.png' %}"/>
+            </div>
+
             </nav>
+
             <div id="img-container">
                 <img src="{% static 'img/menu/pointy-down.svg' %}" id="menu-point-down"/>
                 <img src="{% static 'img/double-point.svg' %}" id="menu-double-point"/>
