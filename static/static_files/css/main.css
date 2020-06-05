@@ -87,6 +87,20 @@
 	color: #ffd600;
 }
 
+#header .text-xsmall{
+	margin-bottom:-12px;
+	line-height: 15px;
+	font-size: 14px;
+	margin-top: 15px;
+	color: #ffd600;
+	margin-left: -5px;
+}
+
+#header #header-quality{
+	width: 30px;
+	margin-bottom: -10px;
+}
+
 #header #logo{
     width: 140px;
     margin-right: 10px;
@@ -180,6 +194,10 @@
     z-index:2;
 }
 
+#menu #menu-emblem img{
+	width: 83px;
+}
+
 #menu a{
 	color: #ffd600;
 	font-size: 24px;
@@ -192,6 +210,15 @@
 
 #menu #cart-icon{
     width: 24px;
+}
+
+#menu #lemonade-container{
+	display: flex;
+}
+
+#menu #menu-price-tag{
+	width: 40px;
+	margin-left: -13px;
 }
 
 #menu #star-left-container, #menu #star-right-container{
@@ -210,8 +237,125 @@
 
 /* CAROUSEL */
 #carousel{
+	margin-top: 20px;
 	border-radius: 20px;
 	overflow: hidden;
+	box-shadow: 0 0 25px #ededed;
+}
+
+
+/* PIZZAS */
+#pizzas-container .text-xlarge{
+	letter-spacing: 0.5px;
+	font-size: 34px;
+	color: #ffd600;
+}
+
+#pizzas-container .text-large{
+	font-size: 28px;
+	letter-spacing: 0.5px;
+	color: #666666;
+	margin-bottom: 5px;
+}
+
+#pizzas-container .text-medium{
+	font-size: 16px;
+	line-height: 20px;
+	color: #969696;
+	height: 60px;
+	margin-bottom: 10px;
+}
+
+#pizzas-container .text-small{
+	font-size: 16px;
+	color: #666666;
+}
+
+#content .price-container{
+	diplay: flex;
+	align-items: center;
+	text-align: center;
+}
+
+.card{
+	border: none;
+}
+
+#content .price-container .text-large{
+   margin-bottom: 0;
+}
+
+#content .price-container .text-small{
+   margin: 0;
+   margin-top: -10px;
+}
+
+#content .pizza-container [type=submit]{
+	font-size: 16px;
+	height: 50px;
+	width: 100px;
+	background-color: #c90000;
+	color: #ffd600;
+	border: 3px solid #ffd600;
+	border-radius: 7px;
+}
+
+#content .pizza-container .edit{
+	font-size: 16px;
+	line-height: 18px;
+	height: 50px;
+	width: 120px;
+	background-color: #c90000;
+	color: #ffd600;
+	border: 3px solid #ffd600;
+	border-radius: 7px;
+}
+
+#content #pizzas-container{
+	margin-top: 40px;
+}
+
+#content .album{
+	padding-top:0 !important;
+}
+
+
+#content #pizzas-container .album .row{
+	padding-top: 25px;
+	border-bottom: 2px solid #ffee93;
+}
+
+#content #pizzas-header div:first-child{
+	margin-bottom: 23px;
+	border-bottom: 2px solid #ffee93;
+}
+
+#content #pizzas-header div:last-child{
+	margin-bottom: 23px;
+	border-bottom: 2px solid #ffee93;
+}
+
+
+#content #pizzas-container .row:last-child{
+	border-bottom: none;
+}
+
+#content .row:first-child{
+	border-bottom: none;
+}
+
+
+#content .pizza-image{
+	width: 280px;
+	margin: 0 auto;
+}
+
+#content .pizza-container:nth-child(2n-1){
+	margin-left: -50px;
+}
+
+#content .pizza-container:nth-child(2n){
+	margin-right: -50px;
 }
 
 /* CART */
@@ -220,13 +364,53 @@
 }
 
 
-#cart-items .quantity-container [type=submit]{
+.quantity-container .add-button, .quantity-container .subtract-button{
 	width: 25px;
     height: 25px;
     margin: 0 15px;
-    padding: 0;
     display: inline-block;
     line-height: 0px;
     text-align: center;
     font-size: 20px;
+    background-color: #c90000;
+    color: #ffd600;
+    border: 2px solid #ffd600;
+    border-radius: 56px;
+}
+
+.remove-button{
+	background-color: #c90000;
+    color: #ffd600;
+    border: 2px solid #ffd600;
+    border-radius: 5px;
+}
+
+.quantity-container .add-button{
+	padding: 0;
+}
+
+.quantity-container .subtract-button{
+	padding-top: 0px;
+}
+
+#table-quantity{
+	padding-left: 26px;
+}
+
+#checkout .text-large{
+	font-size: 28px;
+	letter-spacing: 0.5px;
+	color: #666666;
+	margin-bottom: 15px;
+}
+
+#checkout .text-medium{
+	font-size: 16px;
+	line-height: 20px;
+	color: #969696;
+	margin: 0;
+}
+
+#checkout .text-medium:last-child{
+	margin-bottom: 10px;
 }

@@ -2,18 +2,20 @@
 {% load static %}
 
 {% block content %}
-  <div class="col-sm-8 col-sm-offset-2">
+    <div id="checkout">
+    <div class="container">
+  <div class="col-lg-12">
 
   {% if empty or not request.session.totalprice %}
-    <h2>Your cart is empty, N-word</h2>
+    <h2 class="text-center">Ваша корзина пуста</h2>
 
 
   {% else %}
     <table class="table" id="cart-items">
     <thead>
-        <th>Пицца</th>
-        <th>Цена</th>
-        <th>Количество</th>
+        <th class="text-medium-header">Пицца</th>
+        <th class="text-medium-header">Цена</th>
+        <th class="text-medium-header" id="table-quantity">Количество</th>
         <th></th>
     </thead>
 
@@ -21,16 +23,16 @@
     <tr>
         <td>
             {% if pizza.changes == None %}
-                <p class="item-name">{{ pizza.pizzas.item }}</p>
+                <p class="text-large">{{ pizza.pizzas.item }}</p>
             {% else %}
-                <p class="item-name">{{ pizza.pizzas.item|add:' (изменённая)' }}</p>
+                <p class="text-large">{{ pizza.pizzas.item|add:' (изменённая)' }}</p>
             {% endif %}
 
-        <p class="item-general-info">{{ info|first }}</p>
+        <p class="text-medium">{{ info|first }}</p>
         {% if info|last == '' %}
-            <p>Начинки нет</p>
+            <p class="text-medium">Начинки нет</p>
         {% else %}
-            <p class="item-toppings-info">{{ info|last|capfirst }}</p>
+            <p class="text-medium">{{ info|last|capfirst }}</p>
         {% endif %}
 
         </td>
@@ -39,24 +41,24 @@
 
         <td>
             {% if pizza.changes == None %}
-                {{ pizza.pizzas.price|floatformat:2  }}
+                <p class="text-medium-header">{{ pizza.pizzas.price|floatformat:2  }}</p>
             {% else %}
-                {{ pizza.price_changed|floatformat:2 }}
+                <p class="text-medium-header">{{ pizza.price_changed|floatformat:2 }}</p>
             {% endif %}
         </td>
 
         <td>
-            <div class="quantity-container">
+            <div class="quantity-container text-center">
                 <form method="POST" action="{% url "remove_from_cart" pizza.id %}">
                     {% csrf_token %}
                     <input name="qty" type="number" value="1" style="display:none">
-                    <input type="submit" value="+" class="btn btn-sm btn-outline-secondary">
+                    <input type="submit" value="+" class="btn btn-sm add-button">
                 </form>
-                {{ pizza.quantity }}
+                <p class="text-medium-header">{{ pizza.quantity }}</p>
                 <form method="POST" action="{% url "remove_from_cart" pizza.id %}">
                     {% csrf_token %}
                     <input name="qty" type="number" value="-1" style="display:none">
-                    <input type="submit" value="-" class="btn btn-sm btn-outline-secondary">
+                    <input type="submit" value="-" class="btn btn-sm subtract-button">
                 </form>
             </div>
         </td>
@@ -64,7 +66,7 @@
              <form method="POST" action="{% url 'remove_from_cart' pizza.id %}">
                  {% csrf_token %}
                  <input name="qty" type="number" value="0" style="display:none">
-                 <input type="submit" value="Выгнать из партии" class="btn btn-sm btn-outline-secondary">
+                 <input type="submit" value="Выгнать из партии" class="btn btn-sm remove-button">
              </form>
         </td>
     </tr>
@@ -72,16 +74,16 @@
 
     <tfoot>
         <td></td>
-        <td>Итого: <span id="total">{{ cart.total|floatformat:2  }}</span></td>
+        <td class="text-medium-header">Итого: <span id="total">{{ cart.total|floatformat:2  }}</span></td>
         <td></td>
         <td></td>
     </tfoot>
     </table>
   </div>
 
-    <div class="billing container">
+    <div class="billing">
       <div class="row">
-        <div class="col-md-8 order-md-1">
+        <div class="col-lg-6">
           <h4 class="mb-3">Данные о доставке</h4>
 
           <form class="needs-validation" novalidate method="POST" action="{% url "checkout" %}"  id="form-checkout">
@@ -171,6 +173,8 @@
       </div>
 
   {% endif %}
+    </div>
+    </div>
     </div>
 
 {% endblock %}

@@ -12,6 +12,7 @@
                     <p class="text-xlarge">45 МИНУТ</p>
                     <p class="text-medium">или пицца от партии</p>
                     <p class="text-large">В ПОДАРОК*</p>
+                    <p class="text-xsmall">*С учётом предоставления VIP-партбилета</p>
                 </div>
                 <div class="col-lg-4 text-center" id="logo-container">
                     <img src="{% static 'img/logo.png' %}" class="img-responsive" id="logo" />
@@ -21,6 +22,7 @@
                     <p class="text-xlarge">753-23-25</p>
                     <p class="text-medium">доставка пиццы</p>
                     <p class="text-large">КРУГЛОСУТОЧНО</p>
+                    <img src="{% static 'img/header/quality.svg' %}" id="header-quality"/>
                 </div>
             </div>
         </div>
@@ -58,7 +60,10 @@
                   </li>
 
                   <li class="nav-item col-lg-2 text-center">
+                      <div id="lemonade-container">
                     <a class="nav-link" href="#">Лимонады</a>
+                      <img src="{% static 'img/menu/price-tag.svg' %}" id="menu-price-tag"/>
+                          </div>
                   </li>
 
                   <li class="nav-item col-lg-2 offset-lg-2 text-center">
@@ -89,7 +94,7 @@
             <div id="img-container">
                 <img src="{% static 'img/menu/pointy-down.svg' %}" id="menu-point-down"/>
                 <img src="{% static 'img/double-point.svg' %}" id="menu-double-point"/>
-                <img src="{% static 'img/menu/emblem_center.png' %}" id="menu-emblem"/>
+                <a href="{% url 'home' %}"  id="menu-emblem"><img src="{% static 'img/menu/emblem_center.png' %}"/></a>
             </div>
         </div>
     </div>

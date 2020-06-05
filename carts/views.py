@@ -255,7 +255,7 @@ def sendmail(name, email, comments, time, cart):
         else:
             items.append([item, output(literal_eval(item.changes))])
 
-    text = 'Дорогой товарищ ' + name + '! Спасибо, что оформили заказ на нашем сайте. ' + 'Ваш заказ был оформлен ' \
+    text = 'Дорогой товарищ ' + name + '! Спасибо, что оформили заказ на нашем сайте! ' + 'Ваш заказ был оформлен ' \
            + time + ' под номером №' + str(cart.id) + '. Ваш заказ на сумму ' + str(round(cart.total, 2)) + '0' + ' рублей:\n'
 
     for item in items:
@@ -268,6 +268,6 @@ def sendmail(name, email, comments, time, cart):
     if comments is not '':
         text += '\nВаши комментарий к заказу: ' + comments + '\n'
 
-    text += '\nДа хранит вас Владимир Ильич Ленин!\nСлава КПСС и Советскому союзу!'
+    text += '\nДа хранит вас Владимир Ильич Ленин!\nСлава КПСС и Советскому Союзу!'
     subject = 'Заказ №' + str(cart.id)
     send_mail(subject, text, EMAIL_HOST_USER, [email], fail_silently=False)

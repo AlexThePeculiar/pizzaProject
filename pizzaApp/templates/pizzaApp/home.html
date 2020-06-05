@@ -13,13 +13,13 @@
       </ol>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img class="d-block w-100" src="https://placekitten.com/600/300" alt="First slide">
+          <img class="d-block w-100" src="https://placekitten.com/600/180" alt="First slide">
         </div>
         <div class="carousel-item">
-          <img class="d-block w-100" src="https://placekitten.com/600/300" alt="Second slide">
+          <img class="d-block w-100" src="https://placekitten.com/600/180" alt="Second slide">
         </div>
         <div class="carousel-item">
-          <img class="d-block w-100" src="https://placekitten.com/600/300" alt="Third slide">
+          <img class="d-block w-100" src="https://placekitten.com/600/180" alt="Third slide">
         </div>
       </div>
       <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
@@ -33,33 +33,47 @@
     </div>
 
 
+
+
     <div id="pizzas-container">
+
+        <div class="row" id="pizzas-header">
+                <div class="col-lg-4">
+                </div>
+                <div class="col-lg-4 text-center">
+                    <span class="text-xlarge">ГОРДОСТЬ СОЮЗА</span>
+                </div>
+                <div class="col-lg-4">
+                </div>
+            </div>
+
     <div class="album py-5">
+
 
         {% for pizza, info in pizzas %}
             {% cycle '<div class="row justify-content-around" >' '' %}
 
-                <div class="col-md-6 col-lg-4" id="{{ 'container-'|add:pizza.id }}"> {# col-lg-4; offset-lg-4 on the even elems #}
+                <div class="col-md-6 col-lg-4 pizza-container" id="{{ 'container-'|add:pizza.id }}"> {# col-lg-4; offset-lg-4 on the even elems #}
                   <div class="card mb-4">
-                    <img class="bd-placeholder-img card-img-top" class="img-fluid" src="{% static 'img/'|add:pizza.id|add:'.jpg' %}" focusable="false" aria-label="Placeholder: Thumbnail"><title>Placeholder</title></img>
+                    <img class="bd-placeholder-img card-img-top pizza-image" class="img-fluid" src="{% static 'img/'|add:pizza.id|add:'.jpg' %}" focusable="false" aria-label="Placeholder: Thumbnail"><title>Placeholder</title></img>
                     <div class="card-body">
-                      <p class="card-text">{{ pizza.item }}</p>
-                        <span class="pizza-info">{{ info|first|capfirst }}</span><br>
-                        <span>{{ info|last|capfirst }}</span>
+                      <p class="card-text text-large">{{ pizza.item }}</p>
+                        <p class="text-medium">{{ info|first|capfirst }}<br>
+                        {{ info|last|capfirst }}</p>
                       <div class="d-flex justify-content-between align-items-center">
 
                             <form method="POST" action="{% url "add_to_cart" pizza.id %}">
                                 {% csrf_token %}
                                 <input name="qty" type="number" value="1" style="display:none">
-                                <input type="submit" value="В КОРЗИНУ" class="btn btn-sm btn-outline-secondary">
+                                <input type="submit" value="В КОРЗИНУ" class="btn btn-sm">
                             </form>
 
                           <div class="price-container">
-                              <span>{{ pizza.price|floatformat:2 }}</span>
-                              <span>руб.</span>
+                              <p class="text-large">{{ pizza.price|floatformat:2 }}</p>
+                              <p class="text-small">руб.</p>
                           </div>
 
-                          <a href="{% url 'edit' pizza.id %}"><button type="button" class="btn btn-sm btn-outline-secondary">НАЧАТЬ ПЕРЕСТРОЙКУ</button></a>
+                          <a href="{% url 'edit' pizza.id %}"><button type="button" class="btn btn-sm edit">НАЧАТЬ ПЕРЕСТРОЙКУ</button></a>
 
 
                       </div>
