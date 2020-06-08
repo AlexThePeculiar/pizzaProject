@@ -215,27 +215,31 @@ class Pizzas(models.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        try:
 
-        price = 5
-        pizza = literal_eval(self.ingredients)
-        for topping in pizza['toppings']:
-            if topping[:3] == 'TME':
-                elem = Meat.objects.get(id=topping).price
-            elif topping[:3] == 'TMU':
-                elem = Mushrooms.objects.get(id=topping).price
-            elif topping[:3] == 'TFR':
-                elem = Fruits.objects.get(id=topping).price
-            elif topping[:3] == 'TFI':
-                elem = Fish.objects.get(id=topping).price
-            elif topping[:2] == 'TV':
-                elem = Vegetables.objects.get(id=topping).price
-            elif topping[:2] == 'TS':
-                elem = Sauce.objects.get(id=topping).price
-            else:
-                elem = Cheese.objects.get(id=topping).price
-            price += elem
-        price += Diameter.objects.get(id=pizza['diameter']).price
-        self.price = round(price, 2)
+            price = 5
+            pizza = literal_eval(self.ingredients)
+            for topping in pizza['toppings']:
+                if topping[:3] == 'TME':
+                    elem = Meat.objects.get(id=topping).price
+                elif topping[:3] == 'TMU':
+                    elem = Mushrooms.objects.get(id=topping).price
+                elif topping[:3] == 'TFR':
+                    elem = Fruits.objects.get(id=topping).price
+                elif topping[:3] == 'TFI':
+                    elem = Fish.objects.get(id=topping).price
+                elif topping[:2] == 'TV':
+                    elem = Vegetables.objects.get(id=topping).price
+                elif topping[:2] == 'TS':
+                    elem = Sauce.objects.get(id=topping).price
+                else:
+                    elem = Cheese.objects.get(id=topping).price
+                price += elem
+            price += Diameter.objects.get(id=pizza['diameter']).price
+            self.price = round(price, 2)
+            self.save()
+        except:
+            pass
 
     class Meta:
         managed = False
