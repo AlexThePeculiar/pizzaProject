@@ -18,9 +18,74 @@
         {% block content %}{% endblock %}
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.fn.getCRSF = function(name){
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+	        var csrftoken = $.fn.getCRSF('csrftoken');
+
+
+            $(document).on('click', '.add-item', function(){
+                let pizza_id = $(this).attr('id');
+
+		        $.when(
+				    $.ajax({
+					    headers: { "X-CSRFToken": csrftoken },
+					    url: '{% url "add_to_cart" %}',
+					    type: 'POST',
+					    data: {pizza_id:pizza_id, qty:1},
+				    })
+			    ).then(function(data){
+				    console.log('Adding complete');
+				    console.log(data);
+				    $('.total').text(data.total_price.toFixed(2));
+			    });
+	        });
+
+            $(document).on('click', '.alter-cart', function(){
+                let button = $(this);
+                let item_id = button.attr('data-id');
+                let qty = parseInt(button.attr('data-qty'));
+                let total_quantity = parseInt(button.siblings('.pizza-quantity').text());
+
+		        $.when(
+				    $.ajax({
+					    headers: { "X-CSRFToken": csrftoken },
+					    url: '{% url "alter_items_cart" %}',
+					    type: 'POST',
+					    data: {item_id: item_id, qty:qty},
+				    })
+			    ).then(function(data){
+				    console.log('Alter complete');
+				    console.log(data);
+                    button.siblings('.pizza-quantity').text(data.total_quantity);
+                    if (total_quantity == 1 && qty == -1 || qty == 0){
+                        button.closest('tr').remove();
+                    }
+                    if($('#cart-items tr').length - 2 == 0){
+                            $('#cart-content').html('<h2 class="text-center">Ваша корзина пуста</h2>');
+                    }
+                    $('.total').text(data.total_price.toFixed(2))
+			    });
+	        });
+
+        });
+    </script>
 </body>
 </html>

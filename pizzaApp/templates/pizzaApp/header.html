@@ -56,7 +56,7 @@
                 <ul class="navbar-nav col-lg-12 justify-content-round">
 
                   <li class="nav-item col-lg-2 offset-lg-1 text-center">
-                    <a class="nav-link" href="{% url 'home' %}#content">Пиццы</a>
+                    <a class="nav-link" href="{% url 'home' %}">Пиццы</a>
                   </li>
 
                   <li class="nav-item col-lg-2 text-center">
@@ -72,9 +72,9 @@
 
                   <li class="nav-item col-lg-3">
                     <a class="nav-link" href="{% url 'cart' %}" tabindex="-1" aria-disabled="true">
-                        Корзина: {% if not request.session.totalprice %} 0.00
-                        {% else %} {{ request.session.totalprice|floatformat:2 }}
-                        {% endif %}
+                        Корзина: <span class="total">  {% if not request.session.totalprice %} 0.00
+                        {% else %}{{ request.session.totalprice|floatformat:2 }}
+                        {% endif %}</span>
                     </a>
                   <img src="{% static 'img/menu/cart.svg' %}" id="cart-icon"/>
                   </li>

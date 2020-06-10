@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
+from django.http import JsonResponse
 from pizzaProject.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
 # Create your views here.
@@ -22,18 +23,9 @@ def view(request):
     # get the cart by its id, otherwise print Empty message
     if the_id:
         cart = Cart.objects.get(id=the_id)
-        new_total = 0.00
-        for element in cart.cartitem_set.all():
-            if element.changes is None:
-                line_total = element.pizzas.price * element.quantity
-            else:
-                line_total = element.price_changed * element.quantity
-            new_total += line_total
 
-        request.session['totalprice'] = new_total
+        request.session['totalprice'] = cartTotal(cart)
         # print(cart.pizzas.count())
-        cart.total = new_total
-        cart.save()
 
         items = []
         for item in cart.cartitem_set.all():
@@ -50,16 +42,18 @@ def view(request):
     return render(request, template, context)
 
 
-def remove_from_cart(request, id):
+def alter_items_cart(request):
     if request.method == 'POST':
         qty = int(request.POST['qty'])
+        item_id = int(request.POST['item_id'])
+    print(request.POST)
     try:
         the_id = request.session['cart_id']
         cart = Cart.objects.get(id=the_id)
     except:
         return HttpResponseRedirect(reverse("cart"))
 
-    cartitem = CartItem.objects.get(id=id)
+    cartitem = CartItem.objects.get(id=item_id)
     if qty == 0:
         cartitem.delete()
     elif qty == -1 and cartitem.quantity == 1:
@@ -67,14 +61,18 @@ def remove_from_cart(request, id):
     else:
         cartitem.quantity += qty
         cartitem.save()
-    return HttpResponseRedirect(reverse("cart"))
+
+    total_price = cartTotal(cart)
+    request.session['totalprice'] = total_price
+    return JsonResponse({'total_quantity': cartitem.quantity, 'total_price': total_price})
 
 
-def add_to_cart(request, pizza_id):
+def add_to_cart(request):
     # make a new cart or get a cart if it exists in session
     # request.session.set_expiry(86400)
     if request.method == 'POST':
         qty = int(request.POST['qty'])
+        pizza_id = request.POST['pizza_id']
 
     try:
         the_id = request.session['cart_id']
@@ -91,11 +89,6 @@ def add_to_cart(request, pizza_id):
     except Pizzas.DoesNotExist:
         pass
 
-    # try:
-    #     cart_item = CartItem.objects.get(cart=cart, pizzas=pizza)
-    #     if cart_item.changes is
-    # except:
-    #     cart_item = CartItem.objects.create(cart=cart, pizzas=pizza)
     cart_item, succ = CartItem.objects.get_or_create(cart=cart, pizzas=pizza, changes=None)
 
     cart_item.quantity += int(qty)
@@ -114,12 +107,7 @@ def add_to_cart(request, pizza_id):
 
     cart.total = new_total
     cart.save()
-
-    if not abs(int(qty)):
-        return HttpResponseRedirect(reverse('cart'))
-    else:
-
-        return HttpResponseRedirect(reverse('home') + '#container-' + pizza_id)
+    return JsonResponse({'total_price': round(new_total, 2)})
 
 
 def checkout(request):
@@ -167,12 +155,11 @@ def checkout(request):
     new_order.orderitems = pizzas
     new_order.save()
 
+    template = 'carts/checkout.html'
     context = {'id': the_id, 'name': name}
 
     if email is not '':
         sendmail(name, email, comments, now, cart)
-
-    template = 'carts/checkout.html'
 
     del request.session['cart_id']
     del request.session['totalprice']
@@ -182,6 +169,19 @@ def checkout(request):
     cart.delete()
 
     return render(request, template, context)
+
+
+def cartTotal(cart):
+    new_total = 0.00
+    for element in cart.cartitem_set.all():
+        if element.changes is None:
+            line_total = element.pizzas.price * element.quantity
+        else:
+            line_total = element.price_changed * element.quantity
+        new_total += line_total
+        cart.total = new_total
+        cart.save()
+    return new_total
 
 
 def decipher(dicty):
@@ -256,7 +256,8 @@ def sendmail(name, email, comments, time, cart):
             items.append([item, output(literal_eval(item.changes))])
 
     text = 'Дорогой товарищ ' + name + '! Спасибо, что оформили заказ на нашем сайте! ' + 'Ваш заказ был оформлен ' \
-           + time + ' под номером №' + str(cart.id) + '. Ваш заказ на сумму ' + str(round(cart.total, 2)) + '0' + ' рублей:\n'
+           + time + ' под номером №' + str(cart.id) + '. Ваш заказ на сумму ' + str(
+        round(cart.total, 2)) + '0' + ' рублей:\n'
 
     for item in items:
         if item[0].changes is None:

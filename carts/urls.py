@@ -6,9 +6,8 @@ from carts import views
 urlpatterns = [
     path('', views.view, name='cart'),
     path('checkout/', views.checkout, name='checkout'),
-    re_path(r'^(?P<id>\d+)/$', views.remove_from_cart, name='remove_from_cart'),
-    re_path(r'^(?P<pizza_id>[\w-]+)/$', views.add_to_cart, name='add_to_cart'),
-    # path('test', views.home, name='home')
+    path('alter-item/', views.alter_items_cart, name='alter_items_cart'),
+    path('add-item/', views.add_to_cart, name='add_to_cart'),
 ]
 
 if settings.DEBUG:

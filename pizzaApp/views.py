@@ -3,11 +3,12 @@ from django.urls import reverse
 from .models import Pizzas
 from carts.models import Cart, CartItem
 
-
 from pizzaApp.models import Cheese, Crust, Diameter, Fish, Fruits, Meat, Mushrooms, Sauce, Saucebase, Vegetables
 from carts.views import output
 import itertools
 from ast import literal_eval
+
+
 # Create your views here.
 
 def home(request):
@@ -17,12 +18,12 @@ def home(request):
     for pizza in pizzas:
         items.append([pizza, output(literal_eval(pizza.ingredients))])
 
-
     template = 'pizzaApp/home.html'
     context = {
         'pizzas': items,
     }
     return render(request, template, context)
+
 
 def edit(request, pizza_id):
     if request.method == "POST":
@@ -76,7 +77,7 @@ def edit(request, pizza_id):
         return HttpResponseRedirect(reverse("home"))
 
     else:
-        pizza = Pizzas.objects.get(id = pizza_id)
+        pizza = Pizzas.objects.get(id=pizza_id)
         initial_toppings = literal_eval(pizza.ingredients)['toppings']
         initial_crust = literal_eval(pizza.ingredients)['crust']
         initial_sauceBase = literal_eval(pizza.ingredients)['sauceBase']
@@ -94,7 +95,6 @@ def edit(request, pizza_id):
         vegetables = Vegetables.objects.all()
 
         new_toppings = list(itertools.zip_longest(cheeses, fish, fruits, meats, mushrooms, sauces, vegetables))
-
 
         context = {
             'pizza_id': pizza_id,

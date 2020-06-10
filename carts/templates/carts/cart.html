@@ -3,8 +3,8 @@
 
 {% block content %}
     <div id="checkout">
-    <div class="container">
-  <div class="col-lg-12">
+    <div class="container" id="cart-content">
+  <div class="col-lg-12" >
 
   {% if empty or not request.session.totalprice %}
     <h2 class="text-center">Ваша корзина пуста</h2>
@@ -37,8 +37,6 @@
 
         </td>
 
-
-
         <td>
             {% if pizza.changes == None %}
                 <p class="text-medium-header">{{ pizza.pizzas.price|floatformat:2  }}</p>
@@ -49,32 +47,21 @@
 
         <td>
             <div class="quantity-container text-center">
-                <form method="POST" action="{% url "remove_from_cart" pizza.id %}">
-                    {% csrf_token %}
-                    <input name="qty" type="number" value="1" style="display:none">
-                    <input type="submit" value="+" class="btn btn-sm add-button">
-                </form>
-                <p class="text-medium-header">{{ pizza.quantity }}</p>
-                <form method="POST" action="{% url "remove_from_cart" pizza.id %}">
-                    {% csrf_token %}
-                    <input name="qty" type="number" value="-1" style="display:none">
-                    <input type="submit" value="-" class="btn btn-sm subtract-button">
-                </form>
+
+                <button type="button" class="btn btn-sm add-button alter-cart" data-id="{{ pizza.id }}" data-qty="1">+</button>
+                <p class="text-medium-header pizza-quantity">{{ pizza.quantity }}</p>
+                <button type="button" class="btn btn-sm subtract-button alter-cart" data-id="{{ pizza.id }}" data-qty="-1">-</button>
             </div>
         </td>
         <td>
-             <form method="POST" action="{% url 'remove_from_cart' pizza.id %}">
-                 {% csrf_token %}
-                 <input name="qty" type="number" value="0" style="display:none">
-                 <input type="submit" value="Выгнать из партии" class="btn btn-sm remove-button">
-             </form>
+            <button type="button" class="btn btn-sm remove-button alter-cart" data-id="{{ pizza.id }}" data-qty="0">Выгнать из партии</button>
         </td>
     </tr>
     {% endfor %}
 
     <tfoot>
         <td></td>
-        <td class="text-medium-header">Итого: <span id="total">{{ cart.total|floatformat:2  }}</span></td>
+        <td class="text-medium-header">Итого: <span class="total">{{ cart.total|floatformat:2  }}</span></td>
         <td></td>
         <td></td>
     </tfoot>
